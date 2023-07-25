@@ -1,43 +1,43 @@
 <?php
-
 @include 'config.php';
 
 session_start();
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = $_POST['password'];
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = md5($_POST['password']);
-   $cpass = md5($_POST['cpassword']);
-   $user_type = $_POST['user_type'];
+    // Check if the user exists based on the email
+    $select = "SELECT * FROM user_form WHERE email = '$email'";
+    $result = mysqli_query($conn, $select);
 
-   $select = " SELECT * FROM user_form WHERE email = '$email' && password = '$pass' ";
+    if (mysqli_num_rows($result) === 1) {
+        $row = mysqli_fetch_assoc($result);
+        $hashedPassword = $row['password'];
 
-   $result = mysqli_query($conn, $select);
-
-   if(mysqli_num_rows($result) > 0){
-
-      $row = mysqli_fetch_array($result);
-
-      if($row['user_type'] == 'admin'){
-
-         $_SESSION['admin_name'] = $row['name'];
-         header('location:admin_page.php');
-
-      }elseif($row['user_type'] == 'user'){
-
-         $_SESSION['user_name'] = $row['name'];
-         header('location:user_page.php');
-
-      }
-     
-   }else{
-      $error[] = 'incorrect email or password!';
-   }
-
-};
+        // Verify the entered password with the hashed password in the database
+        if (password_verify($password, $hashedPassword)) {
+            // Password is correct, user can be logged in
+            if ($row['user_type'] === 'admin') {
+                $_SESSION['admin_name'] = $row['name'];
+                header('location: admin_page.php');
+                exit();
+            } elseif ($row['user_type'] === 'user') {
+                $_SESSION['user_name'] = $row['name'];
+                header('location: user_page.php');
+                exit();
+            }
+        } else {
+            $error[] = 'Incorrect email or password!';
+        }
+    } else {
+        $error[] = 'User not found';
+    }
+}
 ?>
+
+<!-- The rest of your HTML code remains unchanged -->
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +52,6 @@ if(isset($_POST['submit'])){
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
-   <link rel="stylesheet" href="css/homepage.css">
 
    
 
@@ -105,20 +104,20 @@ if(isset($_POST['submit'])){
 
 <!-- Footer -->
 <footer class="footer">
-    <div class="">
-        <div class="row">
-            <div class="col-md-2">
-                <p>&copy; 2023</p>
-            </div>
-            <div class="col-md-4 text-center">
-                <p>DeeMerry TechVibe</p>
-            </div>
-            <div class="col-md-4 text-right">
-                <p>Terms | Privacy Policy</p>
-            </div>
-        </div>
-    </div>
-</footer>
+		<div class="footer-container">
+			<div class="row">
+				<div class="text-right">
+					<p>&copy; 2023</p>
+				</div>
+				<div class="text-center">
+					<p>DeeMerry TechVibe</p>
+				</div>
+				<div class="text-a">
+					<a href="#">Terms | Privacy Policy</a>
+				</div>
+			</div>
+		</div>
+	</footer>
 
 </body>
 </html>

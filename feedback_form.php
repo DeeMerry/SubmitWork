@@ -17,7 +17,7 @@
 <body>
      <!-- Navbar -->
 	<nav class="navbar navbar-expand-md text-white shadow">
-		<a class="navbar-brand" href="homepage.php">UESS</a>
+		<a class="navbar-brand" href="index.html">UESS</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -147,8 +147,10 @@
             <textarea name="comments" id="comments" rows="5" cols="30" required></textarea>
             
             <br>
-
+            <a href="connect.php">
             <input type="submit" name= "submit" id="submit" value="Submit Here"/>
+            </a>
+
         </form>
 
 
@@ -157,21 +159,21 @@
      
     
     <!-- Footer -->
-    <footer class="footer">
-        <div class="">
-            <div class="row">
-                <div class="col-md-2">
-                    <p>&copy; 2023</p>
-                </div>
-                <div class="col-md-4 text-center">
-                    <p>Your Company. All Rights Reserved.</p>
-                </div>
-                <div class="col-md-4 text-right">
-                    <p>Terms | Privacy Policy</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+	<footer class="footer">
+		<div class="footer-container">
+			<div class="row">
+				<div class="text-right">
+					<p>&copy; 2023</p>
+				</div>
+				<div class="text-center">
+					<p>DeeMerry TechVibe</p>
+				</div>
+				<div class="text-a">
+					<a href="#">Terms | Privacy Policy</a>
+				</div>
+			</div>
+		</div>
+	</footer>
 
 </body>
 </html>

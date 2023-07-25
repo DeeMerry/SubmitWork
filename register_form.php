@@ -1,38 +1,36 @@
 <?php
-
 @include 'config.php';
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $pass = $_POST['password'];
+    $cpass = $_POST['cpassword'];
+    $user_type = $_POST['user_type'];
+    $dob = $_POST['dob'];
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = md5($_POST['password']);
-   $cpass = md5($_POST['cpassword']);
-   $user_type = $_POST['user_type'];
-   $dob = $_POST['dob'];
+    // Check if the passwords match
+    if ($pass !== $cpass) {
+        $error[] = 'Passwords do not match!';
+    } else {
+        // Check if the user already exists
+        $select = "SELECT * FROM user_form WHERE email = '$email'";
+        $result = mysqli_query($conn, $select);
 
-   $select = " SELECT * FROM user_form WHERE email = '$email' && password = '$pass' ";
+        if (mysqli_num_rows($result) > 0) {
+            $error[] = 'User already exists!';
+        } else {
+            // Hash the password using bcrypt
+            $hashedPassword = password_hash($pass, PASSWORD_BCRYPT);
 
-   $result = mysqli_query($conn, $select);
+            // Insert the user data into the database
+            $insert = "INSERT INTO user_form (name, email, user_type, dob, password) VALUES ('$name', '$email', '$user_type', '$dob', '$hashedPassword')";
+            mysqli_query($conn, $insert);
 
-   if(mysqli_num_rows($result) > 0){
-
-      $error[] = 'user already exist!';
-
-   }else{
-
-      if($pass != $cpass){
-         $error[] = 'password not matched!';
-      }else{
-         $insert = "INSERT INTO user_form(name, email, user_type, dob, password) VALUES('$name','$email','$user_type','$dob','$pass')";
-         mysqli_query($conn, $insert);
-         header('location:login_form.php');
-      }
-   }
-
-};
-
-
+            header('location:login_form.php');
+        }
+    }
+}
 ?>
 
 
@@ -50,7 +48,7 @@ if(isset($_POST['submit'])){
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
-   <link rel="stylesheet" href="css/homepage.css">
+  
 
 </head>
 <body>
@@ -110,19 +108,19 @@ if(isset($_POST['submit'])){
 
 <!-- Footer -->
 <footer class="footer">
-    <div class="foot">
-        <div class="row">
-            <div class="col-md-4">
-                <p>&copy; 2023</p>
-            </div>
-            <div class="col-md-4 text-center">
-                <p>DeeMerry TechVibe</p>
-            </div>
-            <div class="col-md-4 text-right">
-                <p>Terms | Privacy Policy</p>
-            </div>
-        </div>
-    </div>
-</footer>
+		<div class="footer-container">
+			<div class="row">
+				<div class="text-right">
+					<p>&copy; 2023</p>
+				</div>
+				<div class="text-center">
+					<p>DeeMerry TechVibe</p>
+				</div>
+				<div class="text-a">
+					<a href="#">Terms | Privacy Policy</a>
+				</div>
+			</div>
+		</div>
+	</footer>
 </body>
 </html>

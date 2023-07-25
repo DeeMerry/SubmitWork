@@ -56,7 +56,7 @@
 
     <script>
     function redirectToHomePage() {
-        window.location.href = "Homepage.php";
+        window.location.href = "index.html";
     }
 </script>
 </body>
